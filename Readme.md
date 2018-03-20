@@ -9,6 +9,7 @@ The goal is to have converters for:
 The data from each format will be converted to Pascal VOC format with additional tags to hold the format specific data. A "converter" tag will be added to each file with information about how/when the data was converted.
 
 Every file must have the following information. Other information is allowed as well:
+
 | Tag 1  | Tag 2 | Tag 3 | Description |
 | --- | --- | --- | --- |
 | annotation |   |   |   |
@@ -33,4 +34,10 @@ Every file must have the following information. Other information is allowed as 
 |  |  |  |  |
 
 
-All 
+The basic code breakdown is:
+* Every converter is inherited from the VOCConverter which defines some basics about what every label file must have
+* There is a converter for each dataset that implements how to:
+* * Iterate through every image and label
+* * Convert each label to VOC format
+
+Because these files only need to be converted once, the paths are hard coded at the top of each script.
