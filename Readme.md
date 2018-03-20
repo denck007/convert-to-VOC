@@ -1,10 +1,10 @@
 This is a collection of scripts that convert various object detection formats to the Pascal VOC format. The VOC format was chosen because extra data from each format can be added to the xml file. 
 
 The goal is to have converters for:
-* KITTI
-* Udacity Crowd AI
-* Udacity Autti
-* MIT Street Scenes
+- [x] KITTI
+- [ ] Udacity Crowd AI
+- [ ] Udacity Autti
+- [x] MIT Street Scenes
 
 The data from each format will be converted to Pascal VOC format with additional tags to hold the format specific data. A "converter" tag will be added to each file with information about how/when the data was converted.
 
