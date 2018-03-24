@@ -3,7 +3,7 @@ This is a collection of scripts that convert various object detection formats to
 The goal is to have converters for:
 - [x] KITTI
 - [x] Udacity Crowd AI
-- [ ] Udacity Autti
+- [x] Udacity Autti
 - [x] MIT Street Scenes
 
 The data from each format will be converted to Pascal VOC format with additional tags to hold the format specific data. A "converter" tag will be added to each file with information about how/when the data was converted.
