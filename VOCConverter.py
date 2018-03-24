@@ -3,7 +3,7 @@ import xml.etree.ElementTree as ET
 from PIL import Image
 import datetime
 
-class VOCConverter(object):
+class ToVOCConverter(object):
     '''
     Parent class for all the converters
     '''

@@ -1,6 +1,6 @@
 import os
 import xml.etree.ElementTree as ET
-from VOCConverter import VOCConverter
+from VOCConverter import ToVOCConverter
 
 imageFolder = "KITTITest//images//"
 labelIn = "KITTITest//inputLabels//"
@@ -9,7 +9,7 @@ labelOut = "KITTITest//outputLabels//"
 #labelIn = "/mnt/storage/Machine_Learning/Datasets/KITTI/data_object_label_2/training/label_2"
 #labelOut = "KITTI_VOC_Labels"
 
-class KITTIConverter(VOCConverter):
+class KITTItoVOCConverter(ToVOCConverter):
     '''
     In KITTI each image has its own label file with the same name and different extension
     Each label file has 1 line per label
@@ -140,7 +140,7 @@ class KITTIConverter(VOCConverter):
                 print("On image {}/{} {:.1f}% complete".format(counter,numLabels,float(counter)/float(numLabels)*100.))
         print("Finished converting {} labels!".format(numLabels))
 
-converter = KITTIConverter(imageFolder,labelIn,labelOut)
+converter = KITTItoVOCConverter(imageFolder,labelIn,labelOut)
 converter.convertDataset(verbose=True)
 
 

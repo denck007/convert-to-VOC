@@ -1,6 +1,6 @@
 import os
 import xml.etree.ElementTree as ET
-from VOCConverter import VOCConverter
+from VOCConverter import ToVOCConverter
 
 imageFolder = "MITTest//images//"
 labelIn = "MITTest//inputLabels//"
@@ -9,7 +9,7 @@ labelOut = "MITTest//outputLabels//"
 #labelIn = "/mnt/storage/Machine_Learning/Datasets/MIT_Street_Scenes/Annotations/Anno_XML"
 #labelOut = "MIT_VOC_Labels"
 
-class MITConverter(VOCConverter):
+class MITtoVOCConverter(ToVOCConverter):
     '''
     MIT Street Scenes is in a similar format to Pascal VOC, but the labels are polygons not bounding boxes.
     Need to convert the polygons to bounding boxes and add in the additional required info.
@@ -124,7 +124,7 @@ class MITConverter(VOCConverter):
                 print("On image {}/{} {:.1f}% complete".format(counter,numLabels,float(counter)/float(numLabels)*100.))
         print("Finished converting {} labels!".format(numLabels))
 
-converter = MITConverter(imageFolder,labelIn,labelOut)
+converter = MITtoVOCConverter(imageFolder,labelIn,labelOut)
 converter.convertDataset(verbose=True)
 
 
