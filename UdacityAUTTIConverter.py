@@ -9,7 +9,7 @@ from VOCConverter import ToVOCConverter
 #labelOut = "AUTTITest//outputLabels//"
 imageFolder = "/mnt/storage/Machine_Learning/Datasets/Udacity_self_driving_car/object-dataset"
 labelIn = "/mnt/storage/Machine_Learning/Datasets/Udacity_self_driving_car/object-dataset"
-labelOut = "CrowdAI_VOC_Labels"
+labelOut = "AUTTI_VOC_Labels"
 
 class UdacityAUTTItoVOCConverter(ToVOCConverter):
     '''
