@@ -3,12 +3,12 @@ import pandas as pd
 import xml.etree.ElementTree as ET
 from VOCConverter import ToVOCConverter
 
-imageFolder = "CrowdAITest//images//"
-labelIn = "CrowdAITest//inputLabels//"
-labelOut = "CrowdAITest//outputLabels//"
-#imageFolder = "/mnt/storage/Machine_Learning/Datasets/MIT_Street_Scenes/images"
-#labelIn = "/mnt/storage/Machine_Learning/Datasets/MIT_Street_Scenes/Annotations/Anno_XML"
-#labelOut = "MIT_VOC_Labels"
+#imageFolder = "CrowdAITest//images//"
+#labelIn = "CrowdAITest//inputLabels//"
+#labelOut = "CrowdAITest//outputLabels//"
+imageFolder = "/mnt/storage/Machine_Learning/Datasets/Udacity_self_driving_car/object-detection-crowdai"
+labelIn = "/mnt/storage/Machine_Learning/Datasets/Udacity_self_driving_car/object-detection-crowdai"
+labelOut = "CrowdAI_VOC_Labels"
 
 class UdacityCrowdAItoVOCConverter(ToVOCConverter):
     '''
@@ -42,66 +42,40 @@ class UdacityCrowdAItoVOCConverter(ToVOCConverter):
 
         self.imageFormat = ".jpg"
         self.database = "Udacity CrowdAI"
+        self.labelSourceFileName = "labels.csv"
 
     def createXMLLabelFile(self,labelDataFrame):
         '''
         Take in a pandas dataframe with all the labels for an image
         Generate the xml label for the image
-        
+        '''
+        self.currentImageFile = labelDataFrame.Frame[labelDataFrame.axes[0][0]]
 
-
-        self.currentOutFile = os.path.join(self.outputLabelFolder,labelFileName[:labelFileName.rfind("_")] + ".xml")
-        self.currentImageFile = labelFileName[:labelFileName.rfind("_")] + self.imageFormat
-
+        self.currentOutFile = os.path.join(self.outputLabelFolder,self.currentImageFile[:self.currentImageFile.rfind(self.imageFormat)] + ".xml")
         labelXML = self.initializeXMLFile()
 
-        sourceTree = ET.parse(os.path.join(self.sourceLabelFolder,labelFileName))
-        sourceRoot = sourceTree.getroot()
-        sourceRoot = self.removeNewlines(sourceRoot)
-
-        # add the original source data to the new source data, purely to preserve data
-        labelXML.find("source").extend(sourceRoot.find("source"))
-
-        for objET in sourceRoot.iterfind("object"):
-            objectLabel = self.createXMLLabel(objET)
+        for label in labelDataFrame.itertuples():
+            objectLabel = self.createXMLLabel(label)
             labelXML.append(objectLabel)
 
         tree = ET.ElementTree(labelXML)
         tree.write(self.currentOutFile)
 
+        
+
+    def createXMLLabel(self,objectLabelSeries):
+        '''
+        Create a xml style label for the dataframe that is passed in. Return the xml data
         '''
 
-    def createXMLLabel(self,objectLabel):
-        '''
-        Create a xml style label for the line that is passed in. Return the xml data
-        '''
+        objectLabel = ET.Element("object")
+        ET.SubElement(objectLabel,"name").text = objectLabelSeries.Label
 
-        # go over every "pt" label in the object and find the min/max values
-
-        xmin = self.currentImageShape[0]
-        xmax = 0
-        ymin = self.currentImageShape[1]
-        ymax = 0
-
-        try:
-            for pt in objectLabel.find("polygon").iterfind("pt"):
-                x = pt.find("x").text.rstrip("\n").lstrip("\n")
-                x = int(x)
-                y = pt.find("y").text.rstrip("\n").lstrip("\n")
-                y = int(y)
-
-                xmin = min(xmin,x)
-                xmax = max(xmax,x)
-                ymin = min(ymin,y)
-                ymax = max(ymax,y)
-
-            bndbox = ET.SubElement(objectLabel,"bndbox")
-            ET.SubElement(bndbox,"xmin").text = str(xmin)
-            ET.SubElement(bndbox,"ymin").text = str(ymin)
-            ET.SubElement(bndbox,"xmax").text = str(xmax)
-            ET.SubElement(bndbox,"ymax").text = str(ymax)
-        except:
-            print("Error creating polygons for image :{}".format(self.currentImageFile))
+        bndbox = ET.SubElement(objectLabel,"bndbox")
+        ET.SubElement(bndbox,"xmin").text = str(objectLabelSeries.xmin)
+        ET.SubElement(bndbox,"ymin").text = str(objectLabelSeries.ymin)
+        ET.SubElement(bndbox,"xmax").text = str(objectLabelSeries.xmax)
+        ET.SubElement(bndbox,"ymax").text = str(objectLabelSeries.ymax)
 
         return objectLabel
 
@@ -111,25 +85,30 @@ class UdacityCrowdAItoVOCConverter(ToVOCConverter):
         '''
 
         # read in the csv to pandas
-        sourceFile = os.path.join(self.sourceLabelFolder,"labels.csv")
-        assert os.path.exists(sourceFile), "There must be a labels.csv file in the sourceLabelFolder!"
+        sourceFile = os.path.join(self.sourceLabelFolder,self.labelSourceFileName)
+        assert os.path.exists(sourceFile), "There must be a {} file in the sourceLabelFolder!".format(self.labelSourceFileName)
         data = pd.read_csv(sourceFile,header=0)
+        lableImageNames = data.Frame.tolist()
+        lableImageNames = list(set(lableImageNames))
 
         # find all image files
         imageFiles = os.listdir(self.imageFolder)
-        imageFileNames = [i if i.contains(self.imageFormat) for i in imageFiles]
-
+        imageFileNames = [img for img in imageFiles if img.endswith(self.imageFormat)]
 
         # verify there is a label for each image and vise-a-versa
-        imagesWithNoLabel = list(set(imageFileNames) - set(labelFileNames))
-        labelsWithNoImage = list(set(labelFileNames) - set(imageFileNames))
-        assert len(imagesWithNoLabel) == 0, "Images with no label file found: {}".format(imagesWithNoLabel)
+        imagesWithNoLabel = list(set(imageFileNames) - set(lableImageNames))
+        labelsWithNoImage = list(set(lableImageNames) - set(imageFileNames))
+        #assert len(imagesWithNoLabel) == 0, "Images with no label file found: {}".format(imagesWithNoLabel)
+        if len(imagesWithNoLabel) == 0:
+            print("Found {} images with no labels. It is possible that there is nothing in these images".format(len(imagesWithNoLabel)))
         assert len(labelsWithNoImage) == 0, "Labels with no image found: {}".format(labelsWithNoImage)
 
+        numLabels = len(imageFileNames)
         # call createXMLLabelFile() on each file
         counter = 0
-        for label in labelFiles:
+        for img in lableImageNames:
             counter += 1
+            label = data[data.Frame == img]
             self.createXMLLabelFile(label)
             if verbose and counter%100==0:
                 print("On image {}/{} {:.1f}% complete".format(counter,numLabels,float(counter)/float(numLabels)*100.))

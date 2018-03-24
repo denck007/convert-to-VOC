@@ -2,7 +2,7 @@ This is a collection of scripts that convert various object detection formats to
 
 The goal is to have converters for:
 - [x] KITTI
-- [ ] Udacity Crowd AI
+- [x] Udacity Crowd AI
 - [ ] Udacity Autti
 - [x] MIT Street Scenes
 
