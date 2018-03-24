@@ -99,7 +99,7 @@ class UdacityCrowdAItoVOCConverter(ToVOCConverter):
         imagesWithNoLabel = list(set(imageFileNames) - set(lableImageNames))
         labelsWithNoImage = list(set(lableImageNames) - set(imageFileNames))
         #assert len(imagesWithNoLabel) == 0, "Images with no label file found: {}".format(imagesWithNoLabel)
-        if len(imagesWithNoLabel) == 0:
+        if len(imagesWithNoLabel) != 0:
             print("Found {} images with no labels. It is possible that there is nothing in these images".format(len(imagesWithNoLabel)))
         assert len(labelsWithNoImage) == 0, "Labels with no image found: {}".format(labelsWithNoImage)
 
