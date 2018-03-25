@@ -3,12 +3,12 @@ import pandas as pd
 import xml.etree.ElementTree as ET
 from VOCConverter import ToVOCConverter
 
-#imageFolder = "CrowdAITest//images//"
-#labelIn = "CrowdAITest//inputLabels//"
-#labelOut = "CrowdAITest//outputLabels//"
 imageFolder = "/mnt/storage/Machine_Learning/Datasets/Udacity_self_driving_car/object-detection-crowdai"
-labelIn = "/mnt/storage/Machine_Learning/Datasets/Udacity_self_driving_car/object-detection-crowdai"
-labelOut = "CrowdAI_VOC_Labels"
+labelIn = "CrowdAITest//inputLabels//"
+labelOut = "CrowdAITest//outputLabels//"
+#imageFolder = "/mnt/storage/Machine_Learning/Datasets/Udacity_self_driving_car/object-detection-crowdai"
+#labelIn = "/mnt/storage/Machine_Learning/Datasets/Udacity_self_driving_car/object-detection-crowdai"
+#labelOut = "CrowdAI_VOC_Labels"
 
 class UdacityCrowdAItoVOCConverter(ToVOCConverter):
     '''
@@ -71,11 +71,13 @@ class UdacityCrowdAItoVOCConverter(ToVOCConverter):
         objectLabel = ET.Element("object")
         ET.SubElement(objectLabel,"name").text = objectLabelSeries.Label
 
+        # for some reason these are different then every other label system, not sure what is going on.
+        # This mapping matches up with the logic from Pascal, MIT, and AUTTI though
         bndbox = ET.SubElement(objectLabel,"bndbox")
-        ET.SubElement(bndbox,"xmin").text = str(objectLabelSeries.xmin)
-        ET.SubElement(bndbox,"ymin").text = str(objectLabelSeries.ymin)
-        ET.SubElement(bndbox,"xmax").text = str(objectLabelSeries.xmax)
-        ET.SubElement(bndbox,"ymax").text = str(objectLabelSeries.ymax)
+        ET.SubElement(bndbox,"xmin").text = str(objectLabelSeries.ymin)
+        ET.SubElement(bndbox,"ymin").text = str(objectLabelSeries.ymax)
+        ET.SubElement(bndbox,"xmax").text = str(objectLabelSeries.xmin)
+        ET.SubElement(bndbox,"ymax").text = str(objectLabelSeries.xmax)
 
         return objectLabel
 
