@@ -74,10 +74,10 @@ class UdacityCrowdAItoVOCConverter(ToVOCConverter):
         # for some reason these are different then every other label system, not sure what is going on.
         # This mapping matches up with the logic from Pascal, MIT, and AUTTI though
         bndbox = ET.SubElement(objectLabel,"bndbox")
-        ET.SubElement(bndbox,"xmin").text = str(objectLabelSeries.ymin)
-        ET.SubElement(bndbox,"ymin").text = str(objectLabelSeries.ymax)
-        ET.SubElement(bndbox,"xmax").text = str(objectLabelSeries.xmin)
-        ET.SubElement(bndbox,"ymax").text = str(objectLabelSeries.xmax)
+        ET.SubElement(bndbox,"xmin").text = str(objectLabelSeries.xmin)
+        ET.SubElement(bndbox,"xmax").text = str(objectLabelSeries.ymin)
+        ET.SubElement(bndbox,"ymin").text = str(objectLabelSeries.xmax)
+        ET.SubElement(bndbox,"ymax").text = str(objectLabelSeries.ymax)
 
         return objectLabel
 
