@@ -4,13 +4,6 @@ import math
 import xml.etree.ElementTree as ET
 from VOCConverter import ToVOCConverter
 
-#imageFolder = "AUTTITest//images//"
-#labelIn = "AUTTITest//inputLabels//"
-#labelOut = "AUTTITest//outputLabels//"
-imageFolder = "/mnt/storage/Machine_Learning/Datasets/Udacity_self_driving_car/object-dataset"
-labelIn = "/mnt/storage/Machine_Learning/Datasets/Udacity_self_driving_car/object-dataset"
-labelOut = "AUTTI_VOC_Labels"
-
 class UdacityAUTTItoVOCConverter(ToVOCConverter):
     '''
     Data from the Udacity nano degree for self driving car. This data is from AUTTI.
@@ -60,8 +53,6 @@ class UdacityAUTTItoVOCConverter(ToVOCConverter):
         tree = ET.ElementTree(labelXML)
         tree.write(self.currentOutFile)
 
-        
-
     def createXMLLabel(self,objectLabelSeries):
         '''
         Create a xml style label for the dataframe that is passed in. Return the xml data
@@ -75,7 +66,6 @@ class UdacityAUTTItoVOCConverter(ToVOCConverter):
         else:
             ET.SubElement(objectLabel,"attributes").text = ""
         
-
 
         bndbox = ET.SubElement(objectLabel,"bndbox")
         ET.SubElement(bndbox,"xmin").text = str(objectLabelSeries.xmin)
@@ -121,9 +111,6 @@ class UdacityAUTTItoVOCConverter(ToVOCConverter):
             if verbose and counter%100==0:
                 print("On image {}/{} {:.1f}% complete".format(counter,numLabels,float(counter)/float(numLabels)*100.))
         print("Finished converting {} labels!".format(numLabels))
-
-converter = UdacityAUTTItoVOCConverter(imageFolder,labelIn,labelOut)
-converter.convertDataset(verbose=True)
 
 
         

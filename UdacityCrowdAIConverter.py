@@ -3,13 +3,6 @@ import pandas as pd
 import xml.etree.ElementTree as ET
 from VOCConverter import ToVOCConverter
 
-imageFolder = "/mnt/storage/Machine_Learning/Datasets/Udacity_self_driving_car/object-detection-crowdai"
-labelIn = "CrowdAITest//inputLabels//"
-labelOut = "CrowdAITest//outputLabels//"
-#imageFolder = "/mnt/storage/Machine_Learning/Datasets/Udacity_self_driving_car/object-detection-crowdai"
-#labelIn = "/mnt/storage/Machine_Learning/Datasets/Udacity_self_driving_car/object-detection-crowdai"
-#labelOut = "CrowdAI_VOC_Labels"
-
 class UdacityCrowdAItoVOCConverter(ToVOCConverter):
     '''
     Data from the Udacity nano degree for self driving car. This data is from CrowdAI.
@@ -60,8 +53,6 @@ class UdacityCrowdAItoVOCConverter(ToVOCConverter):
 
         tree = ET.ElementTree(labelXML)
         tree.write(self.currentOutFile)
-
-        
 
     def createXMLLabel(self,objectLabelSeries):
         '''
@@ -116,8 +107,6 @@ class UdacityCrowdAItoVOCConverter(ToVOCConverter):
                 print("On image {}/{} {:.1f}% complete".format(counter,numLabels,float(counter)/float(numLabels)*100.))
         print("Finished converting {} labels!".format(numLabels))
 
-converter = UdacityCrowdAItoVOCConverter(imageFolder,labelIn,labelOut)
-converter.convertDataset(verbose=True)
 
 
         

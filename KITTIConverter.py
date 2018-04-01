@@ -2,12 +2,6 @@ import os
 import xml.etree.ElementTree as ET
 from VOCConverter import ToVOCConverter
 
-imageFolder = "KITTITest//images//"
-labelIn = "KITTITest//inputLabels//"
-labelOut = "KITTITest//outputLabels//"
-#imageFolder = "/mnt/storage/Machine_Learning/Datasets/KITTI/data_object_image_2/training/image_2"
-#labelIn = "/mnt/storage/Machine_Learning/Datasets/KITTI/data_object_label_2/training/label_2"
-#labelOut = "KITTI_VOC_Labels"
 
 class KITTItoVOCConverter(ToVOCConverter):
     '''
@@ -84,7 +78,7 @@ class KITTItoVOCConverter(ToVOCConverter):
         roty = line[14]
         
         objectLabel = ET.Element("object")
-        ET.SubElement(objectLabel,"name").text = label
+        ET.SubElement(objectLabel,"name").text = label.lower()
         ET.SubElement(objectLabel,"truncated").text = truncated
         ET.SubElement(objectLabel,"occluded").text = occluded
         ET.SubElement(objectLabel,"alpha").text = alpha
@@ -139,9 +133,5 @@ class KITTItoVOCConverter(ToVOCConverter):
             if verbose and counter%100==0:
                 print("On image {}/{} {:.1f}% complete".format(counter,numLabels,float(counter)/float(numLabels)*100.))
         print("Finished converting {} labels!".format(numLabels))
-
-converter = KITTItoVOCConverter(imageFolder,labelIn,labelOut)
-converter.convertDataset(verbose=True)
-
 
         
